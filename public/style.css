@@ -1,0 +1,30 @@
+.navbar-brand{
+    color:red;
+}
+
+.userCol{
+    margin-top:50px;
+}
+
+.movieImg{
+    width:100%;
+}
+img{
+    width:100%;
+    height:200px;
+}
+.fa-trash-o{
+    color:red;
+}
+
+
+.col-xs-4{
+    box-sizing: border-box;
+
+}
+
+.emptyCollection{
+    text-align: center;
+    font-weight: bold;
+    color:#6E6E6E;
+}
