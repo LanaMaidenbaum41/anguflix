@@ -35,55 +35,77 @@
         <section class="container">
             <div class="row">
                 <h3 class="col-xs-6">My Collection</h3>
-                <h5 class="col-xs-6" ng-model="budget">Budget: {{budget | currency}}</h5>
-            </div>
-            <div class="form-group row">
-                <div class="col-xs-4"><input class="form-control" type="text" ng-model="SearchByTitle"></div>
-                <div class="col-xs-4"><input class="form-control" type="number" ng-model="year"></div>
-                <div class="col-xs-4"><i class="fa fa-trash-o fa-2x" aria-hidden="true" ng-click="changeTrashState()" ng-show="trashState"></i></div>
-                <div class="col-xs-4"><i class="fa fa-check fa-2x" aria-hidden="true" ng-click="changeTrashState()" ng-hide="trashState"></i></div>
-            </div>
-            <div class="row" ng-if="!emptyCollection">
-                <div class="col-xs-12 emptyCollection">
-                        Select movies from below to add to your collection
+                <h5 class="col-xs-6" ng-model="budget" ng-click="openAddAmount()">Budget: {{budget.value | currency}} (click to add)</h5>
+
+                <div class="input-group">
+                    <input class="form-control amount" type="number" ng-model="amount" placeholder="add amount" ng-show="amount">
+                    <span class="input-group-btn">
+                        <button type="submit" ng-click="addToBudget(amount)">add</button>
+                    </span>
                 </div>
+
+    </div>
+    <div class="form-group row">
+        <div class="col-xs-4"><input class="form-control" type="text" ng-model="movieName" placeholder="Search By Title"></div>
+        <div class="col-xs-4">
+            <select class="form-control" type="number" ng-model="movieYear">
+                        <option value="" disabled selected>Select Year</option>
+                        <option ng-repeat="year in years">{{year}}</option>
+                    </select>
+        </div>
+        <div class="col-xs-4"><i class="fa fa-trash-o fa-2x" aria-hidden="true" ng-click="changeTrashState()" ng-show="trashState"></i></div>
+        <div class="col-xs-4"><i class="fa fa-check fa-2x" aria-hidden="true" ng-click="changeTrashState()" ng-hide="trashState"></i></div>
+    </div>
+    <div class="row" ng-if="budget.value == 0">
+        <div class="col-xs-12 emptyCollection">
+            You're at the maximum amount of movies in your budget - Refresh the page to get your $9 back.
+        </div>
+    </div>
+    <div class="row" ng-if="!userMoviesArray.length">
+        <div class="col-xs-12 emptyCollection">
+            Select movies from below to add to your collection
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4 movie" ng-repeat="movie in userMoviesArray | filter:{title:movieName, year:(movieYear||undefined)} track by $index"
+            ng-click="removeFromCollection(movie)">
+            <div class="movieDetails">
+                <div class="movieImg">
+                    <img ng-src="{{ movie.img }}">
+                    <p class="remove" ng-hide="trashState" ng-click="removeFromCollection()">Remove</p>
+                </div>
+                <div class="title">
+                    <h3>{{ movie.title }}</h3>, {{ movie.year }}
+                </div>
+                <p>{{ movie.descrShort }}</p>
             </div>
-            <div class="row">
-                <div class="col-xs-4" ng-repeat="movie in userMoviesArray | filter:SearchByTitle track by $index" ng-click="removeFromCollection(movie)">
+
+        </div>
+
+    </div>
+    </section>
+    <section class="container">
+        <div class="form-group row">
+            <div class="col-xs-4">
+                <h3>All Movies</h3>
+                <input class="form-control" type="text" placeholder="Search By Title" ng-model="SearchByTitle"></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 movie" ng-repeat="movie in movies | filter:SearchByTitle" ng-click="addToCollection(movie)">
+                <div class="movieDetails">
                     <div class="movieImg">
                         <img ng-src="{{ movie.img }}">
                     </div>
-                    <div class="movieDetails">
-                        <p>
-                            <h3 style="display:inline-block;">{{ movie.title }}</h3>, {{ movie.year }}</p>
-                        <p>{{ movie.descrShort }}</p>
+                    <div class="title">
+                        <h3>{{ movie.title }}</h3>, {{ movie.year }}
                     </div>
-
-                </div>
-
-            </div>
-        </section>
-        <section class="container">
-            <div class="form-group row">
-                <div class="col-xs-4">
-                    <h3>All Movies</h3>
-                    <input class="form-control" type="text" placeholder="Search By Title" ng-model="SearchByTitle"></div>
-            </div>
-            <div class="row">
-                <div class="col-xs-4 color" ng-repeat="movie in movies | filter:SearchByTitle" ng-click="addToCollection(movie)">
-
-                    <div class="movieImg">
-                        <img ng-src="{{ movie.img }}">
-                    </div>
-                    <div class="movieDetails">
-                        <p>
-                            <h3 style="display:inline-block;">{{ movie.title }}</h3>, {{ movie.year }}</p>
-                        <p>{{ movie.descrShort }}</p>
-                    </div>
-
+                    <p>{{ movie.descrShort }}</p>
                 </div>
             </div>
-        </section>
+
+        </div>
+        </div>
+    </section>
     </div>
 
 
@@ -91,5 +113,7 @@
 <script type="text/javascript" src="../angular/angular.js"></script>
 <script type="text/javascript" src="app.js"></script>
 <script type="text/javascript" src="../controller.js"></script>
+<script type="text/javascript" src="../jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="../bootstrap/dist/js/bootstrap.js"></script>
 
 </html>

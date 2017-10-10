@@ -1,37 +1,53 @@
 var app = angular.module('movieApp', []);
 //services
 app.service('userMovies', function () {
-    var budget = 9;
+    var budget = { value: 9 };
 
     var userMoviesArray = [];
     var addToCollection = function (movie) {
-       //if its the first movie in the array - put it in
+        //if its the first movie in the array - put it in
         if (!userMoviesArray.length) {
             userMoviesArray.push(movie);
-            budget -= 3;
+            budget.value -= 3;
         }
         //check to make sure the movie is not already in the array 
-        else{
-            var double=false;
+        else {
+            var double = false;
             for (var i = 0; i < userMoviesArray.length; i++) {
                 if (userMoviesArray[i].title == movie.title && userMoviesArray[i].year == movie.year) {
                     double = true;
                 }
             };
-            if(!double){
+            if (!double && checkBudget()) {
                 userMoviesArray.push(movie);
-                budget -= 3;
+                budget.value -= 3;
             }
         }
-        
+
+    }
+    var checkBudget = function () {
+        if (budget.value <= 0) {
+            return false
+        }
+        return true
     }
     var removeFromCollection = function (movie) {
+        for (var i = 0; i < userMoviesArray.length; i++) {
+            if (userMoviesArray[i] == movie) {
+                userMoviesArray.splice(i, 1);
+            }
+        }
 
+    }
+
+    var addToBudget = function (amount) {
+        budget.value += amount;
     }
 
     return {
         addToCollection: addToCollection,
-        budget:budget,
+        budget: budget,
+        addToBudget: addToBudget,
         userMoviesArray: userMoviesArray,
         removeFromCollection: removeFromCollection
     }
